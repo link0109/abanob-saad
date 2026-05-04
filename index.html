@@ -55,7 +55,7 @@
         .tk .icon-box { background: #000; border: 1px solid rgba(255,255,255,0.2); }
         .wa .icon-box { background: #25D366; }
         .call .icon-box { background: #444; }
-        .instapay .icon-box { background: #fff; color: #000; }
+        .vfcash .icon-box { background: var(--gold); color: #000; }
         
         .booking-btn { 
             border: 2px solid var(--gold); 
@@ -71,7 +71,7 @@
             letter-spacing: 1px;
         }
 
-        #booking-modal, #call-modal {
+        #booking-modal, #call-modal, #payment-selection-modal, #vfcash-modal, #orange-cash-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 5000; justify-content: center; align-items: center;
         }
@@ -84,12 +84,15 @@
         }
 
         .confirm-btn { background: var(--gold); color: #000; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+        .pay-option-btn { display: block; width: 100%; padding: 15px; margin: 12px 0; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .vf-style { background: #e60000; color: white; }
+        .orange-style { background: #ff6600; color: white; }
+        .insta-style { background: white; color: black; }
     </style>
 </head>
 <body>
 
 <div class="overlay">
-    <!-- تم تعديل اسم الصورة ليتوافق مع المرفوع بالظبط -->
     <img src="profile.JPEG" class="profile" alt="Abanob Saad">
     
     <div class="brand-container">
@@ -126,15 +129,16 @@
         <div class="icon-box"><i class="fas fa-phone-alt"></i></div><div class="btn-text">اتصل بنا | Call Me</div>
     </div>
 
-    <a class="button instapay" href="https://ipn.eg/S/abanobsaad1/instapay/5AcGmg" target="_blank">
-        <div class="icon-box"><i class="fas fa-university"></i></div><div class="btn-text">إنستا باي | InstaPay</div>
-    </a>
+    <div class="button vfcash" onclick="openPaymentSelection()">
+        <div class="icon-box"><i class="fas fa-money-bill-wave"></i></div><div class="btn-text">تحويل المبلغ | Transfer Money</div>
+    </div>
 
     <div class="footer-copyrights">
         © ABANOB SAAD Photography
     </div>
 </div>
 
+<!-- Modal الحجز -->
 <div id="booking-modal">
     <div class="modal-content">
         <h3 style="text-align:center; color:var(--gold);">تفاصيل الحجز</h3>
@@ -154,6 +158,7 @@
     </div>
 </div>
 
+<!-- Modal الاتصال -->
 <div id="call-modal">
     <div class="modal-content" style="text-align:center;">
         <h3 style="color:var(--gold);">اتصل بنا</h3>
@@ -162,12 +167,65 @@
     </div>
 </div>
 
+<!-- Modal اختيار وسيلة الدفع -->
+<div id="payment-selection-modal">
+    <div class="modal-content" style="text-align:center;">
+        <h3 style="color:var(--gold); margin-bottom: 20px;">اختر وسيلة التحويل</h3>
+        <button class="pay-option-btn vf-style" onclick="showVFCashPage()">فودافون كاش | Vodafone Cash</button>
+        <button class="pay-option-btn orange-style" onclick="showOrangeCashPage()">أورنج كاش | Orange Cash</button>
+        <button class="pay-option-btn insta-style" onclick="handleInstaPay()">إنستا باي | InstaPay</button>
+        <p onclick="closePaymentSelection()" style="color:#888; cursor:pointer; margin-top:15px;">إغلاق</p>
+    </div>
+</div>
+
+<!-- Modal فودافون كاش -->
+<div id="vfcash-modal">
+    <div class="modal-content" style="text-align:center;">
+        <h3 style="color:var(--gold); margin-bottom: 20px;">فودافون كاش</h3>
+        <input type="text" inputmode="decimal" id="cash-amount" placeholder=" أدخل المبلغ هنا " style="text-align:center; font-size:18px;">
+        <button class="confirm-btn" onclick="makeVFCashCall()" style="background:#e60000; color:white;">اتصال وتحويل الآن</button>
+        <p onclick="closeVFCash()" style="color:#888; cursor:pointer; margin-top:20px;">إغلاق</p>
+    </div>
+</div>
+
+<!-- Modal أورنج كاش -->
+<div id="orange-cash-modal">
+    <div class="modal-content" style="text-align:center;">
+        <h3 style="color:#ff6600; margin-bottom: 20px;">أورنج كاش</h3>
+        <input type="text" inputmode="decimal" id="orange-amount" placeholder=" أدخل المبلغ هنا " style="text-align:center; font-size:18px;">
+        <button class="confirm-btn" onclick="makeOrangeCashCall()" style="background:#ff6600; color:white;">اتصال وتحويل الآن</button>
+        <p onclick="closeOrangeCash()" style="color:#888; cursor:pointer; margin-top:20px;">إغلاق</p>
+    </div>
+</div>
+
 <script>
+// تحويل الأرقام العربية إلى إنجليزية لضمان عمل كود الـ USSD
+function convertNumbers(str) {
+    const arabicNums = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
+    for (let i = 0; i < 10; i++) { str = str.replace(arabicNums[i], i); }
+    return str;
+}
+
+// التحكم في المودال
 function openBooking() { document.getElementById('booking-modal').style.display = 'flex'; }
 function closeBooking() { document.getElementById('booking-modal').style.display = 'none'; }
 function openCallModal() { document.getElementById('call-modal').style.display = 'flex'; }
-function closeCallModal() { document.getElementById('call-modal').style.display = 'none'; }
+function closeCallModal() { document.getElementById('call-modal').style.none; document.getElementById('call-modal').style.display = 'none'; }
 
+function openPaymentSelection() { document.getElementById('payment-selection-modal').style.display = 'flex'; }
+function closePaymentSelection() { document.getElementById('payment-selection-modal').style.display = 'none'; }
+function showVFCashPage() { closePaymentSelection(); document.getElementById('vfcash-modal').style.display = 'flex'; }
+function showOrangeCashPage() { closePaymentSelection(); document.getElementById('orange-cash-modal').style.display = 'flex'; }
+function closeOrangeCash() { document.getElementById('orange-cash-modal').style.display = 'none'; }
+function closeVFCash() { document.getElementById('vfcash-modal').style.display = 'none'; }
+
+// التعامل مع إنستا باي (رابط أبانوب)
+function handleInstaPay() {
+    const instaPayLink = "https://ipn.eg/S/abanobsaad1/instapay/5AcGmg";
+    window.location.href = instaPayLink;
+}
+
+// إرسال الحجز للواتساب
 function sendToWhatsApp() {
     const name = document.getElementById('user-name').value;
     const type = document.getElementById('session-type').value;
@@ -176,6 +234,27 @@ function sendToWhatsApp() {
     
     let msg = `استفسار حجز جديد:\nالاسم: ${name}\nالمناسبة: ${type}\nالتاريخ: ${date}`;
     window.open(`https://wa.me/201270065080?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// وظائف التحويل المباشر (USSD)
+function makeVFCashCall() {
+    let amount = document.getElementById('cash-amount').value;
+    amount = convertNumbers(amount); 
+    if(!amount) { alert("يرجى كتابة المبلغ أولاً"); return; }
+    const phoneNumber = "01092217287"; // ملاحظة: يمكنك تغيير هذا الرقم لرقم أبانوب إذا كان لديه فودافون كاش
+    const ussd = `*9*7*${phoneNumber}*${amount}%23`;
+    window.location.href = `tel:${ussd}`;
+    closeVFCash();
+}
+
+function makeOrangeCashCall() {
+    let amount = document.getElementById('orange-amount').value;
+    amount = convertNumbers(amount); 
+    if(!amount) { alert("يرجى كتابة المبلغ أولاً"); return; }
+    const myNumber = "01270065080"; 
+    const ussd = `%237115*7*${amount}*${myNumber}%23`;
+    window.location.href = `tel:${ussd}`;
+    closeOrangeCash();
 }
 </script>
 </body>
