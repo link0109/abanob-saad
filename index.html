@@ -16,7 +16,6 @@
         body {
             margin: 0;
             font-family: 'Montserrat', 'Cairo', sans-serif;
-            /* الحفاظ على صورة الخلفية كما هي */
             background: #0f0f0f url('background.jpeg') no-repeat center center/cover fixed;
             display: flex; justify-content: center;
         }
@@ -47,8 +46,6 @@
             text-decoration: none; margin: 8px 0; width: 100%; max-width: 360px;
             border-radius: 12px; padding: 6px; transition: 0.3s; cursor: pointer;
         }
-
-        .button:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--gold); }
 
         .icon-box { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 18px; color: #fff; }
         .btn-text { flex-grow: 1; text-align: center; font-size: 15px; padding-right: 42px; }
@@ -92,8 +89,8 @@
 <body>
 
 <div class="overlay">
-    <!-- استدعاء الصورة بالاسم المطلوب -->
-    <img src="profile.jpg" class="profile" alt="Abanob Saad">
+    <!-- تم تعديل اسم الصورة ليتوافق مع المرفوع بالظبط -->
+    <img src="profile.JPEG" class="profile" alt="Abanob Saad">
     
     <div class="brand-container">
         <h1 class="brand-name">ABANOB SAAD</h1>
@@ -138,7 +135,6 @@
     </div>
 </div>
 
-<!-- Modals -->
 <div id="booking-modal">
     <div class="modal-content">
         <h3 style="text-align:center; color:var(--gold);">تفاصيل الحجز</h3>
