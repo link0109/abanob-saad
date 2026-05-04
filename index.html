@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABANOB SAAD Photography</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Montserrat:wght@300;500;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-blur: rgba(255, 255, 255, 0.08);
+            --border-color: rgba(255, 255, 255, 0.2);
+            --gold: #d4af37;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', 'Cairo', sans-serif;
+            /* الحفاظ على صورة الخلفية كما هي */
+            background: #0f0f0f url('background.jpeg') no-repeat center center/cover fixed;
+            display: flex; justify-content: center;
+        }
+
+        .overlay {
+            backdrop-filter: blur(15px) saturate(160%);
+            -webkit-backdrop-filter: blur(15px) saturate(160%);
+            background: rgba(0, 0, 0, 0.7);
+            width: 100%; min-height: 100vh;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .profile {
+            width: 130px; height: 130px; border-radius: 50%;
+            object-fit: cover; border: 2px solid var(--gold); margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .brand-container { text-align: center; margin-bottom: 30px; }
+        .brand-name { font-family: 'Cinzel', serif; color: #fff; font-size: 28px; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
+        .brand-sub { color: var(--gold); font-size: 11px; letter-spacing: 4px; text-transform: uppercase; margin-top: 5px; }
+
+        .button {
+            display: flex; align-items: center; background: var(--bg-blur);
+            border: 1px solid var(--border-color); color: white;
+            text-decoration: none; margin: 8px 0; width: 100%; max-width: 360px;
+            border-radius: 12px; padding: 6px; transition: 0.3s; cursor: pointer;
+        }
+
+        .button:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--gold); }
+
+        .icon-box { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 18px; color: #fff; }
+        .btn-text { flex-grow: 1; text-align: center; font-size: 15px; padding-right: 42px; }
+
+        .fb .icon-box { background: #1877F2; }
+        .ig .icon-box { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .tk .icon-box { background: #000; border: 1px solid rgba(255,255,255,0.2); }
+        .wa .icon-box { background: #25D366; }
+        .call .icon-box { background: #444; }
+        .instapay .icon-box { background: #fff; color: #000; }
+        
+        .booking-btn { 
+            border: 2px solid var(--gold); 
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(0,0,0,0) 100%);
+            margin-bottom: 20px;
+        }
+
+        .footer-copyrights {
+            margin-top: auto;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        #booking-modal, #call-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 5000; justify-content: center; align-items: center;
+        }
+        .modal-content { background: #1a1a1a; padding: 25px; border-radius: 20px; border: 1px solid var(--gold); width: 85%; max-width: 380px; text-align: right; color: white; }
+        
+        select, input { 
+            width: 100%; padding: 12px; margin-top: 10px; border-radius: 8px; 
+            background: #000; color: white; border: 1px solid #333; 
+            box-sizing: border-box; font-family: 'Cairo', sans-serif; font-size: 14px; outline: none;
+        }
+
+        .confirm-btn { background: var(--gold); color: #000; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="overlay">
+    <!-- استدعاء الصورة بالاسم المطلوب -->
+    <img src="profile.jpg" class="profile" alt="Abanob Saad">
+    
+    <div class="brand-container">
+        <h1 class="brand-name">ABANOB SAAD</h1>
+        <div class="brand-sub">Professional Photographer</div>
+    </div>
+
+    <div class="button booking-btn" onclick="openBooking()">
+        <div class="icon-box" style="background:var(--gold); color:black;"><i class="fas fa-calendar-check"></i></div>
+        <div class="btn-text">احجز الآن | Book Now</div>
+    </div>
+
+    <a class="button fb" href="https://www.facebook.com/share/1H4PFfjhRz/?mibextid=wwXIfr" target="_blank">
+        <div class="icon-box"><i class="fas fa-user-circle"></i></div><div class="btn-text">Personal Profile</div>
+    </a>
+
+    <a class="button fb" href="https://www.facebook.com/share/1HbKxWSAVz/?mibextid=wwXIfr" target="_blank">
+        <div class="icon-box"><i class="fab fa-facebook-f"></i></div><div class="btn-text">Facebook Page</div>
+    </a>
+
+    <a class="button ig" href="https://www.instagram.com/abanob_saad_photography?igsh=MXZ5N3NlNXRwd3g4NA==" target="_blank">
+        <div class="icon-box"><i class="fab fa-instagram"></i></div><div class="btn-text">Instagram</div>
+    </a>
+
+    <a class="button tk" href="https://www.tiktok.com/@abanobsaad4?_r=1&_t=ZS-964gJNmPsCy" target="_blank">
+        <div class="icon-box"><i class="fab fa-tiktok"></i></div><div class="btn-text">TikTok</div>
+    </a>
+
+    <a class="button wa" href="https://wa.me/201270065080" target="_blank">
+        <div class="icon-box"><i class="fab fa-whatsapp"></i></div><div class="btn-text">WhatsApp</div>
+    </a>
+
+    <div class="button call" onclick="openCallModal()">
+        <div class="icon-box"><i class="fas fa-phone-alt"></i></div><div class="btn-text">اتصل بنا | Call Me</div>
+    </div>
+
+    <a class="button instapay" href="https://ipn.eg/S/abanobsaad1/instapay/5AcGmg" target="_blank">
+        <div class="icon-box"><i class="fas fa-university"></i></div><div class="btn-text">إنستا باي | InstaPay</div>
+    </a>
+
+    <div class="footer-copyrights">
+        © ABANOB SAAD Photography
+    </div>
+</div>
+
+<!-- Modals -->
+<div id="booking-modal">
+    <div class="modal-content">
+        <h3 style="text-align:center; color:var(--gold);">تفاصيل الحجز</h3>
+        <label>المناسبة:</label>
+        <select id="session-type">
+            <option value="" disabled selected>اختر نوع الجلسة</option>
+            <option value="Wedding">زفاف - Wedding</option>
+            <option value="Engagement">خطوبة - Engagement</option>
+            <option value="Session">سيشن خارجي - Session</option>
+        </select>
+        <label>التاريخ:</label>
+        <input type="date" id="session-date">
+        <label>الاسم:</label>
+        <input type="text" id="user-name" placeholder="اسمك بالكامل">
+        <button class="confirm-btn" onclick="sendToWhatsApp()">إرسال الطلب عبر واتساب</button>
+        <p onclick="closeBooking()" style="text-align:center; color:#888; cursor:pointer; margin-top:15px;">إغلاق</p>
+    </div>
+</div>
+
+<div id="call-modal">
+    <div class="modal-content" style="text-align:center;">
+        <h3 style="color:var(--gold);">اتصل بنا</h3>
+        <a href="tel:01270065080" style="display:block; background:#444; padding:15px; color:white; border-radius:10px; text-decoration:none; margin:10px 0; font-weight:bold;">01270065080</a>
+        <p onclick="closeCallModal()" style="color:#888; cursor:pointer; margin-top:15px;">إغلاق</p>
+    </div>
+</div>
+
+<script>
+function openBooking() { document.getElementById('booking-modal').style.display = 'flex'; }
+function closeBooking() { document.getElementById('booking-modal').style.display = 'none'; }
+function openCallModal() { document.getElementById('call-modal').style.display = 'flex'; }
+function closeCallModal() { document.getElementById('call-modal').style.display = 'none'; }
+
+function sendToWhatsApp() {
+    const name = document.getElementById('user-name').value;
+    const type = document.getElementById('session-type').value;
+    const date = document.getElementById('session-date').value;
+    if(!type || !date || !name) { alert("يرجى إكمال جميع البيانات"); return; }
+    
+    let msg = `استفسار حجز جديد:\nالاسم: ${name}\nالمناسبة: ${type}\nالتاريخ: ${date}`;
+    window.open(`https://wa.me/201270065080?text=${encodeURIComponent(msg)}`, '_blank');
+}
+</script>
+</body>
+</html>
